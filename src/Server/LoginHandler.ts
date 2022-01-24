@@ -1,7 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
+import { Account, Handler } from './Model';
 
 
-export default class LoginHandler {
+export default class LoginHandler implements Handler {
 
     private req:IncomingMessage;
     private res:ServerResponse;
@@ -14,10 +15,11 @@ export default class LoginHandler {
     public async handleRequest(): Promise<void> {
         console.log('before getting Body');
         const body = await this.getRequestBody();
-        console.log('requst  Body:'+body);
+        console.log('requst  username:'+body.username);
+        console.log('requst  password:'+body.password);
     }
 
-    private async getRequestBody(): Promise<any> {
+    private async getRequestBody(): Promise<Account> {
         return new Promise((resolve, reject) => {
             let body = '';
             this.req.on('data', (data: string) => {
