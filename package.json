@@ -1,0 +1,16 @@
+{
+  "name": "manage-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Launcher.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^17.0.10"
+  },
+  "scripts": {
+    "start":"ts-node ./src/Launcher.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
