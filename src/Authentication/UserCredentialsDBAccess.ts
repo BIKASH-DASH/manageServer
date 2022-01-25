@@ -22,6 +22,21 @@ export class  UserCredentialsDBAccess {
     }
 
     public async getUserCredentials(username:string,password:string):Promise<UserCredentials | undefined>{
-            throw "";
+            return new Promise((resolve,reject)=>{
+                this.nedb.find({
+                    username,
+                    password
+                },(error:Error,dock:UserCredentials[])=>{
+                    if(error){
+                        reject(error)
+                    }else{
+                       if(dock.length == 0){
+                           resolve(undefined);
+                       }else{
+                           resolve(dock[0])
+                       }
+                    }
+                })
+            })
     }
 }
