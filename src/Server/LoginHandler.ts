@@ -1,15 +1,15 @@
 import { IncomingMessage, ServerResponse, createServer } from 'http';
 import { Account, Handler, TokenGenerator, SessionToken } from './Model';
-import { HTTP_CODES } from '../shared/Model';
+import { HTTP_CODES, HTTP_METHODS } from '../shared/Model';
 
 
 export default class LoginHandler implements Handler {
 
-    private req:IncomingMessage;
-    private res:ServerResponse;
-    private tokenGenerator:TokenGenerator;
+    private req: IncomingMessage;
+    private res: ServerResponse;
+    private tokenGenerator: TokenGenerator;
 
-    constructor(req:IncomingMessage, res:ServerResponse,tokenGenerator:TokenGenerator) {
+    constructor(req: IncomingMessage, res: ServerResponse, tokenGenerator: TokenGenerator) {
         this.req = req;
         this.res = res;
         this.tokenGenerator = tokenGenerator;
@@ -17,27 +17,50 @@ export default class LoginHandler implements Handler {
     }
     public async handleRequest(): Promise<void> {
 
+        switch (this.req.method) {
+            case HTTP_METHODS.POST:
+                await this.handlePost();
+                break;
+
+            default:
+                await this.handleNotFound()
+                break;
+        }
+
+
+
+
+
+
+    }
+
+    private async handleNotFound(){
+        this.res.statusCode = HTTP_CODES.NOT_FOUND;
+        this.res.write('Not Found')
+    }
+
+    private async handlePost() {
+
         try {
-            
+
             const body = await this.getRequestBody();
             const SessionToken = await this.tokenGenerator.generateToken(body);
-        
-            if(SessionToken){
-                this.res.statusCode = HTTP_CODES.CREATED ;
-                this.res.writeHead(HTTP_CODES.CREATED,{
-                    'Content-Type':'application/json'
+
+            if (SessionToken) {
+                this.res.statusCode = HTTP_CODES.CREATED;
+                this.res.writeHead(HTTP_CODES.CREATED, {
+                    'Content-Type': 'application/json'
                 })
                 this.res.write(JSON.stringify(SessionToken))
-            }else{
-                this.res.statusCode = HTTP_CODES.NOT_FOUND ;
+            } else {
+                this.res.statusCode = HTTP_CODES.NOT_FOUND;
                 this.res.write('wrong credentials')
             }
 
         } catch (error) {
-            this.res.write('error:'+error)
+            this.res.write('error:' + error)
         }
 
-       
     }
 
     private async getRequestBody(): Promise<Account> {
@@ -47,7 +70,7 @@ export default class LoginHandler implements Handler {
                 body += data;
             });
             this.req.on('end', () => {
-                try { 
+                try {
                     resolve(JSON.parse(JSON.stringify(body)))
                 } catch (error) {
                     reject(error)
