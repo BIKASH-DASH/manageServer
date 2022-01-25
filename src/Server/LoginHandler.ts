@@ -1,22 +1,35 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { Account, Handler } from './Model';
+import { Account, Handler, TokenGenerator, SessionToken } from './Model';
 
 
 export default class LoginHandler implements Handler {
 
     private req:IncomingMessage;
     private res:ServerResponse;
+    private tokenGenerator:TokenGenerator;
 
-    constructor(req:IncomingMessage, res:ServerResponse) {
+    constructor(req:IncomingMessage, res:ServerResponse,tokenGenerator:TokenGenerator) {
         this.req = req;
         this.res = res;
+        this.tokenGenerator = tokenGenerator;
 
     }
     public async handleRequest(): Promise<void> {
-        console.log('before getting Body');
-        const body = await this.getRequestBody();
-        console.log('requst  username:'+body.username);
-        console.log('requst  password:'+body.password);
+
+        try {
+            
+            const body = await this.getRequestBody();
+            const SessionToken = await this.tokenGenerator.generateToken(body);
+        
+            if(SessionToken){
+                this.res.write('valid credentials')
+            }
+
+        } catch (error) {
+            this.res.write('error:'+error)
+        }
+
+       
     }
 
     private async getRequestBody(): Promise<Account> {

@@ -11,7 +11,7 @@
     "typescript": "^4.5.5"
   },
   "scripts": {
-    "start": " nodemon --watch 'src/**'  --exec 'ts-node src/Launcher.ts'"
+    "start": "nodemon --watch 'src/**'  --exec 'ts-node src/Launcher.ts'"
   },
   "keywords": [],
   "author": "",
