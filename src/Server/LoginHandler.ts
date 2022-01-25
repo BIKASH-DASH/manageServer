@@ -1,5 +1,6 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage, ServerResponse, createServer } from 'http';
 import { Account, Handler, TokenGenerator, SessionToken } from './Model';
+import { HTTP_CODES } from '../shared/Model';
 
 
 export default class LoginHandler implements Handler {
@@ -22,7 +23,14 @@ export default class LoginHandler implements Handler {
             const SessionToken = await this.tokenGenerator.generateToken(body);
         
             if(SessionToken){
-                this.res.write('valid credentials')
+                this.res.statusCode = HTTP_CODES.CREATED ;
+                this.res.writeHead(HTTP_CODES.CREATED,{
+                    'Content-Type':'application/json'
+                })
+                this.res.write(JSON.stringify(SessionToken))
+            }else{
+                this.res.statusCode = HTTP_CODES.NOT_FOUND ;
+                this.res.write('wrong credentials')
             }
 
         } catch (error) {
