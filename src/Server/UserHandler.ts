@@ -11,6 +11,8 @@ export class UserHandler extends BaseRequestHandler  {
 
     constructor(req:IncomingMessage,res:ServerResponse,tokenValidator:TokenValidator){
         super(req,res);
+        console.log('tokenValidator--------',tokenValidator);
+
         this.tokenValidator = tokenValidator;
     }
 
@@ -27,7 +29,9 @@ export class UserHandler extends BaseRequestHandler  {
         }
     }
     private async handleGet() {
-        const parsedUrl = Utils.getUrlParameters(this.req.url);
+        const operationAuthorized = await this.operationAuthorized(AccessRights.READ);
+        if(operationAuthorized){
+            const parsedUrl = Utils.getUrlParameters(this.req.url);
         if(parsedUrl){
             const userID = parsedUrl?.query.id;
             if(userID){
@@ -42,12 +46,18 @@ export class UserHandler extends BaseRequestHandler  {
         }
 
         }
+
+        }else{
+            this.responseUnAuthorized('Missing or invalid authentication');
+        }
+
     }
 
     public async operationAuthorized(operation:AccessRights) :Promise <boolean>{
        const tokenID = this.req.headers.authorization;
        if(tokenID){
            const tokenRights = await this.tokenValidator.validateToken(tokenID);
+
            if(tokenRights.accessRights.includes(operation)){
                return true;
            }else{

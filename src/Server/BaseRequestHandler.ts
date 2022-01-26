@@ -42,9 +42,14 @@ export abstract class BaseRequestHandler {
         this.res.write(JSON.stringify(object));
     }
 
-
     protected async  responseBedRequest(message:string){
         this.res.writeHead(HTTP_CODES.BAD_REQUEST);
+        this.res.write(message)
+    }
+
+
+    protected async  responseUnAuthorized(message:string){
+        this.res.writeHead(HTTP_CODES.UNAUTHORIZED);
         this.res.write(message)
     }
 
