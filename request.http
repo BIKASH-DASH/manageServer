@@ -9,4 +9,4 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/users?id2=asf2123332
-
+Authorization: aaaaaaaaaaaaaaa34

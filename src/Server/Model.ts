@@ -18,3 +18,18 @@ export interface TokenGenerator{
     generateToken(account:Account):Promise<SessionToken | undefined>
 }
 
+export interface TokenValidator{
+    validateToken(tokenID:string):Promise<TokenRights>
+}
+
+export interface TokenRights{
+
+    accessRights: AccessRights[];
+    state:TokenState
+}
+
+export enum TokenState{
+    VALID,
+    INVALID,
+    EXPIRED
+}

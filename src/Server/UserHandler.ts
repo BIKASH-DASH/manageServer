@@ -1,14 +1,17 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { UsersDbAccess } from '../User/UsersDbAccess';
-import { HTTP_METHODS, HTTP_CODES } from '../shared/Model';
+import { HTTP_METHODS, HTTP_CODES, AccessRights } from '../shared/Model';
 import Utils from './Utils';
 import { BaseRequestHandler } from './BaseRequestHandler';
+import { TokenValidator } from './Model';
 
 export class UserHandler extends BaseRequestHandler  {
     private usersDbAccess:UsersDbAccess = new UsersDbAccess();
+    private tokenValidator : TokenValidator;
 
-    constructor(req:IncomingMessage,res:ServerResponse){
+    constructor(req:IncomingMessage,res:ServerResponse,tokenValidator:TokenValidator){
         super(req,res);
+        this.tokenValidator = tokenValidator;
     }
 
 
@@ -39,6 +42,21 @@ export class UserHandler extends BaseRequestHandler  {
         }
 
         }
+    }
+
+    public async operationAuthorized(operation:AccessRights) :Promise <boolean>{
+       const tokenID = this.req.headers.authorization;
+       if(tokenID){
+           const tokenRights = await this.tokenValidator.validateToken(tokenID);
+           if(tokenRights.accessRights.includes(operation)){
+               return true;
+           }else{
+               return false;
+           }
+       }else{
+        return false;
+       }
+
     }
 
 
