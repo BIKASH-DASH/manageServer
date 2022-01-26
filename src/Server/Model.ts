@@ -1,9 +1,10 @@
-import { AccessRights } from '../shared/Model';
-export interface Account  {
-    username:string
-    password:string
-}
+import { AccessRight } from "../Shared/Model";
 
+
+export interface Account {
+    username: string,
+    password: string
+}
 
 
 export interface SessionToken {
@@ -11,25 +12,24 @@ export interface SessionToken {
     username: string,
     valid: boolean,
     expirationTime: Date,
-    accessRights: AccessRights[]
+    accessRights: AccessRight[]
 }
 
-export interface TokenGenerator{
-    generateToken(account:Account):Promise<SessionToken | undefined>
-}
-
-export interface TokenValidator{
-    validateToken(tokenID:string):Promise<TokenRights>
-}
-
-export interface TokenRights{
-
-    accessRights: AccessRights[];
-    state:TokenState
-}
-
-export enum TokenState{
+export enum TokenState {
     VALID,
     INVALID,
     EXPIRED
+}
+
+export interface TokenRights {
+    accessRights: AccessRight[],
+    state: TokenState
+}
+
+export interface TokenGenerator {
+    generateToken(account: Account): Promise<SessionToken | undefined>
+}
+
+export interface TokenValidator {
+    validateToken(tokenId: string): Promise<TokenRights>
 }

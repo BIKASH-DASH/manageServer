@@ -1,25 +1,22 @@
-import { parse,  UrlWithParsedQuery } from "url";
+import { parse, UrlWithParsedQuery } from 'url';
 
-export default class Utils {
+export class Utils {
 
-    public static getUrlBasePath(url:string | undefined): string {
-        if(url){
-            const parseUrl = parse(url);
-            
-            return parseUrl.pathname!.split('/')[1]
-        }else{
 
-            return 'a'
+    public static getUrlBasePath(url: string | undefined): string {
+        if (url) {
+            const parsedUrl = parse(url);
+            return parsedUrl.pathname!.split('/')[1];
+        } else {
+            return '';
         }
-
     }
 
-    public static getUrlParameters(url:string | undefined):UrlWithParsedQuery | undefined{
-        if(url){
-            return parse(url,true)
-        }else{
-            return undefined
+    public static getUrlParameters(url: string | undefined): UrlWithParsedQuery | undefined {
+        if (url) {
+            return parse(url, true);
+        } else {
+            return undefined;
         }
-
     }
 }

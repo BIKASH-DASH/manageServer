@@ -11,4 +11,17 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/users?id=asf212333
-Authorization: 46j88ptd737
+Authorization: z7c1rdvno39
+
+###
+PUT http://localhost:8080/users
+Authorization: d62bkwhd154
+Content-Type: application/json
+
+{
+    "age":50,e
+    "email":"some@othermail.com",
+    "name":"bbbb",
+    "workingPosition":5
+}
+
