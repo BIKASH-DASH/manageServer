@@ -5,3 +5,14 @@ Content-Type: application/json
     "username":"user1",
     "password":"password1" 
 }
+
+
+###
+GET http://localhost:8080/users?id=123
+Content-Type: application/json
+
+{
+    "username":"user1",
+    "password":"password1" 
+}
+
