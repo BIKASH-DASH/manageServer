@@ -21,4 +21,20 @@ export class UsersDbAccess {
         })
     }
 
+    public async getUserByID(userID:string): Promise<User | undefined> {
+        return new Promise ((resolve,reject)=>{
+            this.nedb.find({id:userID},(err:Error,dock:any)=>{
+                if(err){
+                    reject(err)
+                }else{
+                    if(dock.length==0){
+                        resolve(undefined)
+                    }else{
+                        resolve(dock[0])
+                    }
+                }
+            })
+        })
+    }
+
 }
