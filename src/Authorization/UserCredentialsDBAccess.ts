@@ -1,6 +1,5 @@
 import { UserCredentials } from "../Shared/Model";
 import * as Nedb from 'nedb';
-import { delayResponse } from "../Shared/MethodDecorators";
 
 export class UserCredentialsDBAccess {
 
@@ -33,7 +32,6 @@ export class UserCredentialsDBAccess {
                         if (docs.length == 0) {
                             resolve(undefined);
                         } else {
-                            console.log('method finished');
                             resolve(docs[0])
                         }
                     }

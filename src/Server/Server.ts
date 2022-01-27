@@ -3,7 +3,6 @@ import { Utils } from './Utils';
 import { LoginHandler } from './LoginHandler';
 import { Authorizer } from '../Authorization/Authorizer';
 import { UsersHandler } from './UsersHandler';
-import { Monitor } from '../Shared/ObjectsCounter';
 
 export class Server {
 
@@ -12,14 +11,10 @@ export class Server {
     public createServer() {
         createServer(
             async (req: IncomingMessage, res: ServerResponse) => {
-                console.log(`got request from ${req.headers["user-agent"]} for ${req.url}`);
-                this.addCorsHeader(res);
+                console.log('got request from: ' + req.url);
                 const basePath = Utils.getUrlBasePath(req.url);
 
                 switch (basePath) {
-                    case 'systemInfo':
-                        res.write(Monitor.printInstances());
-                        break;
                     case 'login':
                         await new LoginHandler(req, res, this.authorizer).handleRequest();
                         break;
@@ -34,11 +29,5 @@ export class Server {
             }
         ).listen(8080);
         console.log('server started')
-    }
-
-    private addCorsHeader(res: ServerResponse) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', '*');
-        res.setHeader('Access-Control-Allow-Headers', '*');
     }
 }

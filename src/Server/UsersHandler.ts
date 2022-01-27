@@ -4,10 +4,9 @@ import { HTTP_METHODS, HTTP_CODES, AccessRight, User } from "../Shared/Model";
 import { Utils } from "./Utils";
 import { BaseRequestHandler } from "./BaseRequestHandler";
 import { TokenValidator } from "./Model";
-import { countInstances } from "../Shared/ObjectsCounter";
 
 
-@countInstances
+
 export class UsersHandler extends BaseRequestHandler {
 
     private usersDBAccess: UsersDBAccess = new UsersDBAccess();
@@ -22,9 +21,6 @@ export class UsersHandler extends BaseRequestHandler {
 
     async handleRequest(): Promise<void> {
         switch (this.req.method) {
-            case HTTP_METHODS.OPTIONS:
-                this.res.writeHead(HTTP_CODES.OK);
-                break;
             case HTTP_METHODS.GET:
                 await this.handleGet();
                 break;
@@ -41,20 +37,21 @@ export class UsersHandler extends BaseRequestHandler {
     }
     private async handleDelete() {
         const operationAuthorized = await this.operationAuthorized(AccessRight.DELETE);
-        if (operationAuthorized) {
+        if(operationAuthorized){
             const parsedUrl = Utils.getUrlParameters(this.req.url);
-            if (parsedUrl) {
-                if (parsedUrl.query.id) {
-                    const deleteResult = await this.usersDBAccess.deleteUser(parsedUrl.query.id as string);
-                    if (deleteResult) {
-                        this.respondText(HTTP_CODES.OK, `user ${parsedUrl.query.id} deleted`)
-                    } else {
-                        this.respondText(HTTP_CODES.NOT_FOUND, `user ${parsedUrl.query.id} was not deleted`)
+            if(parsedUrl){
+                if(parsedUrl.query.id){
+                    const deleteResult = await this.usersDBAccess.deleteUser(parsedUrl.query.id as string)
+                    if(deleteResult){
+                        this.respondText(HTTP_CODES.OK,`user ${parsedUrl.query.id } deleted successfully`)
+                    }else{
+                        this.respondText(HTTP_CODES.NOT_FOUND,`user ${parsedUrl.query.id } not found`)
                     }
-                } else {
-                    this.respondBadRequest('missing id in the request');
                 }
+            }else{
+                    this.respondBadRequest('missing id in url')
             }
+
         }
     }
 
@@ -66,7 +63,7 @@ export class UsersHandler extends BaseRequestHandler {
                 await this.usersDBAccess.putUser(user);
                 this.respondText(HTTP_CODES.CREATED, `user ${user.name} created`);
             } catch (error) {
-                this.respondBadRequest('error.message');
+                this.respondBadRequest('error---');
             }
         } else {
             this.respondUnauthorized('missing or invalid authentication');

@@ -2,9 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { Account, TokenGenerator } from "./Model";
 import { HTTP_CODES, HTTP_METHODS } from "../Shared/Model";
 import { BaseRequestHandler } from "./BaseRequestHandler";
-import { countInstances } from "../Shared/ObjectsCounter";
 
-@countInstances
 export class LoginHandler extends BaseRequestHandler {
 
     private tokenGenerator: TokenGenerator
@@ -18,9 +16,6 @@ export class LoginHandler extends BaseRequestHandler {
         switch (this.req.method) {
             case HTTP_METHODS.POST:
                 await this.handlePost();
-                break;
-            case HTTP_METHODS.OPTIONS:
-                this.res.writeHead(HTTP_CODES.OK);
                 break;
             default:
                 this.handleNotFound();

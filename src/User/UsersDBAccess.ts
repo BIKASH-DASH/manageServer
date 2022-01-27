@@ -15,11 +15,11 @@ export class UsersDBAccess {
             user.id = this.generateUserId();
         }
         return new Promise((resolve, reject) => {
-            this.nedb.insert(user, (err) => {
+            this.nedb.insert(user, (err,data:any) => {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(1);
+                    resolve(data);
                 }
             })
         });
@@ -41,19 +41,19 @@ export class UsersDBAccess {
         });
     }
 
-    public async deleteUser(userId: string): Promise<boolean> {
-        const operationSuccess = await this.deleteUserFromDb(userId);
-        this.nedb.loadDatabase();
-        return operationSuccess;
+    public async deleteUser (userID:string):Promise<boolean>{
+            const operationSuccess = this.deleteUserFromDb(userID);
+            this.nedb.loadDatabase();
+            return operationSuccess;
     }
 
     private async deleteUserFromDb(userId: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.nedb.remove({ id: userId }, (err, numRemoved: number) => {
+            this.nedb.remove({ id: userId }, (err,numRemove:number) => {
                 if (err) {
                     reject(err);
                 } else {
-                    if (numRemoved == 0) {
+                    if (numRemove == 0) {
                         resolve(false);
                     } else {
                         resolve(true);
@@ -62,6 +62,7 @@ export class UsersDBAccess {
             })
         });
     }
+
 
     public async getUsersByName(name: string): Promise<User[]> {
         const regEx = new RegExp(name);
