@@ -7,22 +7,22 @@ Content-Type: application/json
 }
 ###
 GET http://localhost:8080/users?id=asd23234
-Authorization: 802keng7rad
+Authorization: 6pq03xyllbj
 
 
 ###
 
 DELETE  http://localhost:8080/users?id=0e37s1rjbp9e
-Authorization: 802keng7rad
+Authorization: 6pq03xyllbj
 
 ###
 
 GET http://localhost:8080/users?name=John
-Authorization: 802keng7rad
+Authorization: 6pq03xyllbj
 
 ###
 PUT http://localhost:8080/users
-Authorization: 802keng7rad
+Authorization: 6pq03xyllbj
 Content-Type: application/json
 
 {
